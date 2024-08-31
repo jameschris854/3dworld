@@ -11,7 +11,7 @@ const Wheel = forwardRef(({ radius = 0.7, leftSide, ...props }, ref) => {
   // kinematic bodies move based on their velocity and need to be manually moved.
   useCylinder(() => ({ mass: leftSide ? 10 : 1, type: 'Kinematic', material: 'wheel', collisionFilterGroup: 0, args: [radius, radius, 0.5, 16], ...props }), ref);
   return (
-    <mesh ref={ref}>
+    <mesh castShadow ref={ref}>
       <mesh rotation={[0, 0, ((leftSide ? -1 : 1) * Math.PI) / 2]}>
         <mesh material={materials.Rubber} geometry={nodes.wheel_1.geometry} />
         <mesh material={materials.Steel} geometry={nodes.wheel_2.geometry} />

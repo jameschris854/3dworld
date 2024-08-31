@@ -1,7 +1,7 @@
 import { useBox } from "@react-three/cannon";
 import { useLoader } from "@react-three/fiber";
 import React, { useMemo } from "react";
-import { Vector3 } from "three";
+import { Color, Vector3 } from "three";
 import { FontLoader, TextGeometry } from "three-stdlib";
 
 const Letter = ({ offset, offsetY, offsetZ, textGeo, mass = 100,rotation }) => {
@@ -19,9 +19,13 @@ const Letter = ({ offset, offsetY, offsetZ, textGeo, mass = 100,rotation }) => {
     }
   
     return (
-      <mesh ref={ref} castShadow>
+      <mesh ref={ref} castShadow receiveShadow>
         <primitive object={textGeo?.textGeo} attach="geometry" />
-        <meshLambertMaterial />
+        <meshPhysicalMaterial
+         color={"#006e04"}
+         metalness={1}
+         roughness={0.3}
+        />
       </mesh>
     );
   };

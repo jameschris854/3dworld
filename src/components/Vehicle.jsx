@@ -1,27 +1,16 @@
-import { useRef, forwardRef, useEffect, useLayoutEffect } from 'react';
+import { useRef} from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useRaycastVehicle } from '@react-three/cannon';
 import useControls from './useControls';
 import Drifter from './Drifter';
 import Wheel from './Wheel';
-import { PerspectiveCamera } from '@react-three/drei';
+import React from 'react';
+import FollowCamera from './FollowCamera';
+import { Vector3 } from 'three';
 
 const Vehicle = ({ radius = 0.7, width = 1.2, height = 0.3, front = 1.3, back = -1.15, steer = 0.6, force = 3000, maxBrake = 1e5, ...props }) => {
   const chassis = useRef();
-  const controls = useControls();
-  const defaultCamera = useThree(s => s.camera);
-
-  useLayoutEffect(() => {
-    if (defaultCamera && chassis.current) {
-      defaultCamera.rotation.set(0, Math.PI, 0);
-      defaultCamera.position.set(0, 0, 10);
-      console.log(chassis.current)
-      defaultCamera.lookAt(chassis.current.position);
-      defaultCamera.rotation.x -= 0.3;
-      defaultCamera.rotation.z = Math.PI; // resolves the weird spin in the beginning
-    }
-  }, [defaultCamera])
-
+  const {camera} = useThree()
   const wheelInfo = {
     radius,
     directionLocal: [0, -1, 0],
@@ -51,6 +40,13 @@ const Vehicle = ({ radius = 0.7, width = 1.2, height = 0.3, front = 1.3, back = 
     indexRightAxis: 0,
     indexUpAxis: 1
   }));
+
+  const controls = useControls({reset: () => {
+    vehicle.current.position.set(new Vector3(0,0,0));
+    chassis.current.position.set(new Vector3(0,0,0));
+    chassis.current.rotation.copy(new Vector3(Math.PI/2,Math.PI,0))
+    camera.position.set(0,0,10)
+  }});
   
   useFrame(() => {
 
@@ -72,13 +68,13 @@ const Vehicle = ({ radius = 0.7, width = 1.2, height = 0.3, front = 1.3, back = 
 
 
   return (
-    <group ref={vehicle} position={[0, 0, -0.4]}>
-      {props.children}
+    <group castShadow receiveShadow ref={vehicle} position={[0, 0, -0.4]}>
       <Drifter ref={chassis} rotation={props.rotation} />
       <Wheel ref={wheels[0]} radius={radius} leftSide />
       <Wheel ref={wheels[1]} radius={radius} />
       <Wheel ref={wheels[2]} radius={radius} leftSide />
       <Wheel ref={wheels[3]} radius={radius} />
+      <FollowCamera target={chassis} />
     </group>
   );
 };

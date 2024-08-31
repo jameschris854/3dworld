@@ -9,12 +9,12 @@ import World from "./components/World";
 function App() {
   const debug = false;
   const [bgColor, setBgColor] = useState('#5a47ce');
-
+  // orthographic camera={{position:[0,0,10],zoom:50}}
   return (
     <>
       <Loader />
       <Suspense fallback={null}>
-        <Canvas shadows >
+        <Canvas shadows>
         <fog attach="fog" args={[bgColor, 10, 50]} />
         <Physics broadphase="SAP" contactEquationRelaxation={4} friction={1e-3} allowSleep isPaused={false} gravity={[0, 0, -9.82]} > 
             {debug ? <Debug>

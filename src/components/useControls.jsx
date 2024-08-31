@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const useControls = () => {
+const useControls = ({reset}) => {
 
     const [front,setFront] = useState();
     const [back,setBack] = useState();
@@ -11,56 +11,46 @@ const useControls = () => {
 
     useEffect(() => {
 
-        const handleKeyDown = (e) => {
+        const handleKey = (e) => {
+            const update = e.type === "keyup" ? false : true
             switch (e.code) {
                 case "ArrowUp":
-                    setFront(true)
+                    setFront(update)
                     break;
                 case "ArrowDown":
-                    setBack(true)
+                    setBack(update)
                     break;
                 case "ArrowLeft":
-                    setLeft(true)
+                    setLeft(update)
                     break;
                 case "ArrowRight":
-                    setRight(true)
+                    setRight(update)
                     break;
                 case "Space":
-                    setHandBrake(true)
+                    setHandBrake(update)
                     break;
                 default:
                     break;
             }
         }
 
-        const handleKeyUp = (e) => {
+        const handleKeyPress = (e) => {
             switch (e.code) {
-                case "ArrowUp":
-                    setFront(false)
-                    break;
-                case "ArrowDown":
-                    setBack(false)
-                    break;
-                case "ArrowLeft":
-                    setLeft(false)
-                    break;
-                case "ArrowRight":
-                    setRight(false)
-                    break;
-                case "Space":
-                    setHandBrake(false)
+                case "KeyR":
+                    reset && reset()
                     break;
                 default:
-                    break;
+                    break
             }
         }
 
-        document.addEventListener("keydown",handleKeyDown)
-        document.addEventListener("keyup",handleKeyUp)
+        document.addEventListener("keypress",handleKeyPress)
+        document.addEventListener("keydown",handleKey)
+        document.addEventListener("keyup",handleKey)
 
         return () => {
-            document.removeEventListener("keydown",handleKeyDown)
-            document.removeEventListener("keyup",handleKeyUp)
+            document.removeEventListener("keydown",handleKey)
+            document.removeEventListener("keyup",handleKey)
         }
 
     },[])
@@ -70,7 +60,8 @@ const useControls = () => {
         back,
         left,
         right,
-        handBrake
+        handBrake,
+        reset
     }
 }
 

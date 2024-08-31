@@ -10,7 +10,7 @@ import React, { forwardRef, useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { useBox } from '@react-three/cannon';
 
-const Drifter = forwardRef(({ args = [1,0.5,2], mass = 1000, setVisible, ...props }, ref) => {
+const Drifter = forwardRef(({ args = [1,0.5,2], mass = 1000, setVisible, children,...props }, ref) => {
   const { nodes, materials } = useGLTF('/drifter.glb');
 
   const [, api] = useBox(
@@ -18,14 +18,13 @@ const Drifter = forwardRef(({ args = [1,0.5,2], mass = 1000, setVisible, ...prop
       mass,
       args,
       allowSleep: false,
-      position:[0,0,10],
       ...props
     }),
     ref
   );
 
   return (
-    <mesh ref={ref} api={api} userData={{ id: 'drifter' }} {...props} >
+    <mesh castShadow ref={ref} api={api} userData={{ id: 'drifter' }} {...props} >
       {/* <group position={[0, -0, 0]} scale={[0.009, 0.009, 0.009]} dispose={null}>
         <group rotation={[0, 0, 0]}>
           <group rotation={[-Math.PI / 2, 0, -Math.PI / 2]}>
@@ -45,7 +44,12 @@ const Drifter = forwardRef(({ args = [1,0.5,2], mass = 1000, setVisible, ...prop
         </group>
       </group> */}
     <boxGeometry args={args} castShadow/>
-    <meshBasicMaterial />
+    <meshPhysicalMaterial
+            color="orange"    // Base color of the material
+            metalness={1}     // Fully metallic
+            roughness={0.7}
+            />
+    {children}
     </mesh>
   );
 });

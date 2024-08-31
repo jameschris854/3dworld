@@ -20,18 +20,23 @@ const Sample = () => {
     const directionalLightRef = useRef<DirectionalLight>()
 
     return <>
-        <mesh ref={planeRef} receiveShadow>
-            <planeGeometry args={[10, 10]} />
-            <meshStandardMaterial opacity={0} transparent color={"#ffffff"} />
+        <mesh ref={planeRef} castShadow receiveShadow>
+            <planeGeometry args={[100, 100]} />
+            <meshPhysicalMaterial
+            color="silver"    // Base color of the material
+            metalness={1}     // Fully metallic
+            roughness={0.3}   // Medium roughness
+            />
         </mesh>
         <mesh ref={cubeRef} castShadow>
             <boxGeometry args={[1, 1, 1]} />
             <meshPhysicalMaterial color={"#ff0000"} />
+            
         </mesh>
-        <Vehicle rotation={[Math.PI / 2, 0, 0]} />
+        <Vehicle rotation={[Math.PI/2, Math.PI, 0]} />
         <Text3d text="3D WORLD" textPosition={{ x: 0, y: -5, z: 2.1 }} size={4} depth={2} mass={10} rotation={[Math.PI / 2, 0, 0]} />
         <Text3d text="CAR STIMULATION" textPosition={{ x: 0, y: 5, z: 2.1 }} size={4} depth={2} mass={10} rotation={[Math.PI / 2, 0, 0]} />
-        <ambientLight intensity={0.5} />
+        {/* <ambientLight intensity={0.5} /> */}
         <directionalLight castShadow ref={directionalLightRef} position={[0, 0, 10]} intensity={1} />
         <OrbitControls />
     </>
